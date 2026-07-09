@@ -1,0 +1,19 @@
+---
+apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: my-registry
+spec:
+  app:
+    storage:
+      type: sql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://postgres:5432/apicurio-registry
+          userName: apicurio
+          password: apicurio
+    ingress:
+      host: my-registry-app.apps.cluster.example
+  ui:
+    ingress:
+      host: my-registry-ui.apps.cluster.example

@@ -1,0 +1,25 @@
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: postgres-connector
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+spec:
+  class: io.debezium.connector.postgresql.PostgresConnector
+  tasksMax: 1
+  config:
+    database.hostname: postgres
+    database.port: "5432"
+    database.user: postgres
+    database.password: postgres
+    database.dbname: sourcedb
+    topic.prefix: dbserver1
+    plugin.name: pgoutput
+    # Apicurio Avro converters
+    key.converter: io.apicurio.registry.utils.converter.AvroConverter
+    key.converter.apicurio.registry.url: http://my-registry-app:8080/apis/registry/v3
+    key.converter.apicurio.registry.auto-register: "true"
+    value.converter: io.apicurio.registry.utils.converter.AvroConverter
+    value.converter.apicurio.registry.url: http://my-registry-app:8080/apis/registry/v3
+    value.converter.apicurio.registry.auto-register: "true"

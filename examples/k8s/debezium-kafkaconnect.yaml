@@ -1,0 +1,54 @@
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: my-connect-cluster
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: 3.9.0
+  replicas: 1
+  bootstrapServers: my-cluster-kafka-bootstrap:9092
+  config:
+    group.id: connect-cluster
+    offset.storage.topic: connect-cluster-offsets
+    config.storage.topic: connect-cluster-configs
+    status.storage.topic: connect-cluster-status
+    offset.storage.replication.factor: 1
+    config.storage.replication.factor: 1
+    status.storage.replication.factor: 1
+    # Default converters — Apicurio Avro
+    key.converter: io.apicurio.registry.utils.converter.AvroConverter
+    key.converter.apicurio.registry.url: http://my-registry-app:8080/apis/registry/v3
+    key.converter.apicurio.registry.auto-register: "true"
+    value.converter: io.apicurio.registry.utils.converter.AvroConverter
+    value.converter.apicurio.registry.url: http://my-registry-app:8080/apis/registry/v3
+    value.converter.apicurio.registry.auto-register: "true"
+  build:
+    output:
+      type: docker
+      image: my-registry.io/my-connect-cluster:latest
+      # pushSecret: my-registry-credentials  # uncomment if using a private registry
+    plugins:
+      - name: debezium-postgres-connector
+        artifacts:
+          - type: maven
+            group: io.debezium
+            artifact: debezium-connector-postgres
+            version: 3.0.0.Final
+      - name: debezium-mysql-connector
+        artifacts:
+          - type: maven
+            group: io.debezium
+            artifact: debezium-connector-mysql
+            version: 3.0.0.Final
+      - name: apicurio-registry-converter
+        artifacts:
+          - type: maven
+            group: io.apicurio
+            artifact: apicurio-registry-utils-converter
+            version: 3.0.0
+          - type: maven
+            group: io.apicurio
+            artifact: apicurio-registry-avro-serde-kafka
+            version: 3.0.0

@@ -1,0 +1,64 @@
+---
+# Plain (no auth) — connect to Strimzi plain listener
+apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: my-registry
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: my-cluster-kafka-bootstrap:9092
+    ingress:
+      host: my-registry-app.apps.cluster.example
+  ui:
+    ingress:
+      host: my-registry-ui.apps.cluster.example
+
+# ---
+# TLS variant — uncomment and replace the spec above
+#
+# apiVersion: registry.apicur.io/v1
+# kind: ApicurioRegistry3
+# metadata:
+#   name: my-registry
+# spec:
+#   app:
+#     storage:
+#       type: kafkasql
+#       kafkasql:
+#         bootstrapServers: my-cluster-kafka-bootstrap:9093
+#         tls:
+#           keystoreSecretRef:
+#             name: apicurio-registry         # Strimzi KafkaUser secret
+#           keystorePasswordSecretRef:
+#             name: apicurio-registry
+#           truststoreSecretRef:
+#             name: my-cluster-cluster-ca-cert # Strimzi cluster CA
+#           truststorePasswordSecretRef:
+#             name: my-cluster-cluster-ca-cert
+#     ingress:
+#       host: my-registry-app.apps.cluster.example
+#   ui:
+#     ingress:
+#       host: my-registry-ui.apps.cluster.example
+
+# ---
+# KafkaAccess variant — simplest with Strimzi KafkaAccess operator
+#
+# apiVersion: registry.apicur.io/v1
+# kind: ApicurioRegistry3
+# metadata:
+#   name: my-registry
+# spec:
+#   app:
+#     storage:
+#       type: kafkasql
+#       kafkasql:
+#         kafkaAccessSecretName: my-kafka-access
+#     ingress:
+#       host: my-registry-app.apps.cluster.example
+#   ui:
+#     ingress:
+#       host: my-registry-ui.apps.cluster.example
