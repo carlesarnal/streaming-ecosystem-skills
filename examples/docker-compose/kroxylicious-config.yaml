@@ -1,0 +1,20 @@
+# Kroxylicious proxy configuration for the local Docker Compose stack.
+# This is a minimal passthrough proxy — add filters as needed.
+# See: https://kroxylicious.io/kroxylicious/kroxylicious-proxy/
+adminHttp:
+  endpoints:
+    prometheus: {}
+  host: 0.0.0.0
+  port: 9190
+virtualClusters:
+  my-cluster-proxy:
+    targetCluster:
+      bootstrap_servers: kafka:29092
+    clusterNetworkAddressConfigProvider:
+      type: PortPerBrokerClusterNetworkAddressConfigProvider
+      config:
+        bootstrapAddress: localhost:19092
+        brokerAddressPattern: localhost
+        brokerStartPort: 19093
+    logNetwork: false
+    logFrames: false

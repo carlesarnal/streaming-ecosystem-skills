@@ -1,0 +1,42 @@
+---
+apiVersion: kroxylicious.io/v1alpha1
+kind: KafkaProxy
+metadata:
+  name: my-proxy
+spec: {}
+---
+apiVersion: kroxylicious.io/v1alpha1
+kind: KafkaProxyIngress
+metadata:
+  name: my-proxy-ingress
+spec:
+  proxyRef:
+    name: my-proxy
+  clusterIP:
+    protocol: TCP
+---
+apiVersion: kroxylicious.io/v1alpha1
+kind: KafkaService
+metadata:
+  name: my-kafka-service
+spec:
+  # References a Strimzi-managed Kafka cluster directly (requires Strimzi 0.49.0+)
+  strimziKafkaRef:
+    name: my-cluster
+---
+apiVersion: kroxylicious.io/v1alpha1
+kind: VirtualKafkaCluster
+metadata:
+  name: my-virtual-cluster
+spec:
+  proxyRef:
+    name: my-proxy
+  targetKafkaServiceRef:
+    name: my-kafka-service
+  ingresses:
+    - ingressRef:
+        name: my-proxy-ingress
+  # Uncomment and add filter references as needed
+  # filterRefs:
+  #   - name: my-encryption-filter
+  #   - name: my-validation-filter

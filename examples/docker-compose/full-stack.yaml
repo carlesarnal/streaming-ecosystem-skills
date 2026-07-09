@@ -75,6 +75,22 @@ services:
       apicurio-registry:
         condition: service_healthy
 
+  kroxylicious:
+    image: quay.io/kroxylicious/kroxylicious:latest
+    ports:
+      - "19092:19092"
+      - "19093:19093"
+    volumes:
+      - ./kroxylicious-config.yaml:/opt/kroxylicious/config.yaml:ro
+    depends_on:
+      kafka:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9190/metrics || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   debezium-connect:
     image: quay.io/debezium/connect:3.0
     ports:

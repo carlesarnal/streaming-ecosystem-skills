@@ -60,7 +60,16 @@ Guide for diagnosing and resolving common cross-project issues between Strimzi (
    - **Route not resolving:** Check the Route is admitted: `oc get route <name> -o jsonpath='{.status.ingress[0].conditions}'`. If the host is not resolving, verify the OpenShift router is running and the wildcard DNS is configured.
    - **ImagePullBackOff on OpenShift:** If the KafkaConnect image built via imagestream can't be pulled, check the image reference: `oc get is my-connect-cluster -o jsonpath='{.status.dockerImageRepository}'`
 
-9. **Diagnostic commands reference:**
+9. **Kroxylicious proxy issues:**
+   - **Strimzi version mismatch:** Kroxylicious `strimziKafkaRef` requires Strimzi 0.49.0+. Check the Strimzi operator version: `kubectl get deployment strimzi-cluster-operator -o jsonpath='{.spec.template.spec.containers[0].image}'`. If using an older Strimzi, use explicit `bootstrapServers` in the KafkaService CR instead.
+   - **FrameOversizedException with TLS/OAuth:** This usually means a protocol mismatch — the proxy expects TLS but the client sends plaintext (or vice versa). Verify the listener configuration matches the client's security protocol.
+   - **Records not encrypted/validated:** Check the filter is referenced in `filterRefs` of the VirtualKafkaCluster CR. Filters execute in order — ensure the correct filter name is listed. Check proxy logs: `kubectl logs -l app=kroxylicious -n <namespace> --tail=50 | grep -i filter`
+   - **Proxy pod not starting:** Check if the Kroxylicious CRDs are installed: `kubectl get crd kafkaproxies.kroxylicious.io`. Check operator logs: `kubectl logs -l app=kroxylicious-operator --tail=50`
+   - **Client can't connect through proxy:** Verify the KafkaProxyIngress service exists: `kubectl get svc -l app=kroxylicious -n <namespace>`. Ensure the client bootstrap server points to the proxy service, not the Kafka service directly.
+   - **Vault KMS connection errors:** Check the Vault Transit engine URL is correct and accessible from the proxy pod. Verify the Vault token is mounted and has the `transit/encrypt/*` and `transit/decrypt/*` policies.
+   - **Schema validation rejecting valid records:** Verify `apicurioGlobalId` matches the schema ID in the registry: `curl http://<registry>:8080/apis/registry/v3/ids/globalIds/<id>`. Check if `allowNulls` and `allowEmpty` are set appropriately.
+
+10. **Diagnostic commands reference:**
    ```bash
    # K8s/OpenShift: Check all components
    kubectl get kafka,kafkaconnect,kafkaconnector,apicurioregistry3 -n <namespace>
@@ -100,4 +109,10 @@ Guide for diagnosing and resolving common cross-project issues between Strimzi (
 
    # Check Debezium connector status
    curl -s http://<connect>:8083/connectors/<name>/status | python3 -m json.tool
+
+   # K8s/OpenShift: Kroxylicious proxy status
+   kubectl get kafkaproxy,virtualkafkacluster,kafkaservice,kafkaprotocolfilter -n <namespace>
+
+   # K8s/OpenShift: Kroxylicious proxy logs
+   kubectl logs -l app=kroxylicious -n <namespace> --tail=50
    ```

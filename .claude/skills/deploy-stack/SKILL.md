@@ -101,7 +101,13 @@ Guide for deploying Strimzi (Kafka), Apicurio Registry, and optionally Debezium 
    - MySQL: `examples/k8s/debezium-connector-mysql.yaml`
    Update the database connection details (hostname, port, credentials) and the registry URL.
 
-8. **Verify end-to-end.** Check:
+8. **Deploy Kroxylicious proxy (optional).** If the user needs record encryption, schema validation at the proxy level, or multi-tenancy, deploy Kroxylicious. Check if the operator is installed:
+   ```bash
+   kubectl get crd kafkaproxies.kroxylicious.io 2>/dev/null && echo "Installed" || echo "Not installed"
+   ```
+   If not installed, follow the `deploy-kroxylicious` skill. Then create the proxy CRs using `examples/k8s/kroxylicious-proxy.yaml` as a template, with `strimziKafkaRef` pointing to the Kafka cluster deployed in step 3. Add filters as needed using `examples/k8s/kroxylicious-encryption-filter.yaml` or `examples/k8s/kroxylicious-validation-filter.yaml`. Clients should then connect through the proxy's bootstrap service instead of the Kafka bootstrap service directly. Note: Kroxylicious requires Strimzi 0.49.0+.
+
+9. **Verify end-to-end.** Check:
    - Kafka topics exist: `kubectl exec my-cluster-kafka-0 -- bin/kafka-topics.sh --bootstrap-server localhost:9092 --list`
    - Registry API responds:
      - **OpenShift:** Use the Route URL: `curl https://$(oc get route <registry-route> -o jsonpath='{.spec.host}')/apis/registry/v3/system/info`

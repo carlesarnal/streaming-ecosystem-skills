@@ -1,0 +1,18 @@
+---
+# Record Validation filter using Apicurio Registry
+# Validates that record values conform to a schema registered in Apicurio
+apiVersion: kroxylicious.io/v1alpha1
+kind: KafkaProtocolFilter
+metadata:
+  name: my-validation-filter
+spec:
+  type: RecordValidation
+  configTemplate:
+    rules:
+      - topicNames:
+          - my-topic
+        schemaValidationConfig:
+          apicurioGlobalId: 1
+          apicurioRegistryUrl: http://my-registry-app:8080
+          allowNulls: true
+          allowEmpty: true

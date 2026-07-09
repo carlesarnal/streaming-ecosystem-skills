@@ -1,0 +1,40 @@
+---
+# Record Encryption filter using HashiCorp Vault KMS
+# Encrypts record values with envelope encryption (DEK encrypted by KEK in Vault)
+apiVersion: kroxylicious.io/v1alpha1
+kind: KafkaProtocolFilter
+metadata:
+  name: my-encryption-filter
+spec:
+  type: RecordEncryption
+  configTemplate:
+    kms: VaultKmsService
+    kmsConfig:
+      vaultTransitEngineUrl: https://vault.example.com:8200/v1/transit
+      tls: {}
+      vaultToken:
+        passwordFile: /opt/vault/token
+    selector: TemplateKekSelector
+    selectorConfig:
+      template: "KEK_$(topicName)"
+---
+# Record Encryption filter using AWS KMS (alternative)
+# Uncomment and use instead of the Vault filter above
+# apiVersion: kroxylicious.io/v1alpha1
+# kind: KafkaProtocolFilter
+# metadata:
+#   name: my-encryption-filter-aws
+# spec:
+#   type: RecordEncryption
+#   configTemplate:
+#     kms: AwsKmsService
+#     kmsConfig:
+#       endpointUrl: https://kms.us-east-1.amazonaws.com
+#       accessKey:
+#         passwordFile: /opt/aws/access-key
+#       secretKey:
+#         passwordFile: /opt/aws/secret-key
+#       region: us-east-1
+#     selector: TemplateKekSelector
+#     selectorConfig:
+#       template: "alias/KEK_$(topicName)"
