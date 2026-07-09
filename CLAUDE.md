@@ -9,14 +9,14 @@ A collection of Claude Code skills (not application code) for the **Strimzi + Ap
 ## Repository Structure
 
 - `.claude/skills/` — Six skills that guide Claude through deployment, configuration, and troubleshooting of the streaming stack
-- `examples/k8s/` — Kubernetes CRs (Strimzi Kafka, Apicurio Registry, Debezium KafkaConnect/KafkaConnector)
+- `examples/k8s/` — Kubernetes/OpenShift CRs (Strimzi Kafka, Apicurio Registry, Debezium KafkaConnect/KafkaConnector)
 - `examples/docker-compose/full-stack.yaml` — Local dev stack (Kafka KRaft + PostgreSQL + Apicurio Registry + Debezium Connect)
 
 ## Skills Overview
 
 | Skill | Purpose |
 |-------|---------|
-| `deploy-stack` | Deploy on Kubernetes using Strimzi, Apicurio, and Debezium operators |
+| `deploy-stack` | Deploy on Kubernetes/OpenShift using Strimzi, Apicurio, and Debezium operators |
 | `deploy-stack-local` | Spin up locally with Docker Compose |
 | `configure-kafkasql` | Set up KafkaSQL storage for Apicurio Registry (Kafka journal + SQL snapshots) |
 | `connect-debezium-to-registry` | Wire Debezium CDC connectors to use Apicurio for schema management |
@@ -27,7 +27,7 @@ A collection of Claude Code skills (not application code) for the **Strimzi + Ap
 
 Each skill is a single `SKILL.md` file with YAML frontmatter (`name`, `description`, `allowed-tools`) followed by a numbered step-by-step guide. Skills are conversational — they ask the user questions to determine environment and configuration before generating manifests or code.
 
-When editing skills, keep the interactive question-then-generate pattern: determine environment first (K8s vs Docker, auth mode, schema format), then produce the appropriate configuration.
+When editing skills, keep the interactive question-then-generate pattern: determine environment first (K8s/OpenShift vs Docker, auth mode, schema format), then produce the appropriate configuration. Several skills include OpenShift-specific guidance (Routes instead of Ingress, `oc` commands alongside `kubectl`, SCCs) — maintain this parity when updating.
 
 ## Example Manifests
 
