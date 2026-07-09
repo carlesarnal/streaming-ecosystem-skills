@@ -18,7 +18,7 @@ Guide for configuring Apicurio Registry to use KafkaSQL storage — a Kafka jour
    **Option A — KafkaAccess CR (simplest).** Uses Strimzi's KafkaAccess API to automatically wire the connection:
    ```yaml
    # 1. Create KafkaUser with ACLs
-   apiVersion: kafka.strimzi.io/v1beta2
+   apiVersion: kafka.strimzi.io/v1
    kind: KafkaUser
    metadata:
      name: apicurio-registry

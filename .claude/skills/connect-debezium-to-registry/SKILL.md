@@ -16,7 +16,7 @@ Guide for configuring Debezium CDC connectors to use Apicurio Registry as the sc
 
 2. **For Kubernetes (Strimzi operator):** Create or update a `KafkaConnector` CR. The key converter properties go in `spec.config`:
    ```yaml
-   apiVersion: kafka.strimzi.io/v1beta2
+   apiVersion: kafka.strimzi.io/v1
    kind: KafkaConnector
    metadata:
      name: my-connector

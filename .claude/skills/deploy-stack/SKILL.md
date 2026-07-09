@@ -40,7 +40,13 @@ Guide for deploying Strimzi (Kafka), Apicurio Registry, and optionally Debezium 
 
    Check if the Apicurio Registry operator is installed (`kubectl get crd apicurioregistries3.registry.apicur.io`). If not:
    - **OpenShift:** Install "Apicurio Registry" from OperatorHub, or via a Subscription CR targeting `community-operators`.
-   - **Kubernetes:** Install via OLM or direct manifests from the Apicurio operator releases.
+   - **Kubernetes:** Install via YAML manifests (replace `PLACEHOLDER_NAMESPACE` with the target namespace):
+     ```bash
+     export NAMESPACE=<namespace>
+     curl -sSL https://raw.githubusercontent.com/Apicurio/apicurio-registry/main/operator/install/install.yaml \
+       | sed "s/PLACEHOLDER_NAMESPACE/$NAMESPACE/g" \
+       | kubectl apply -f - -n $NAMESPACE
+     ```
 
 2. **Ask the user about configuration.** Determine:
    - Which namespace/project to deploy into

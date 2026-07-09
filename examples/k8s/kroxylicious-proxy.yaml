@@ -22,7 +22,14 @@ metadata:
 spec:
   # References a Strimzi-managed Kafka cluster directly (requires Strimzi 0.49.0+)
   strimziKafkaRef:
+    kind: Kafka
+    group: kafka.strimzi.io
     name: my-cluster
+    listenerName: plain
+    trustStrimziCaCertificate: false
+  nodeIdRanges:
+    - start: 0
+      end: 2
 ---
 apiVersion: kroxylicious.io/v1alpha1
 kind: VirtualKafkaCluster

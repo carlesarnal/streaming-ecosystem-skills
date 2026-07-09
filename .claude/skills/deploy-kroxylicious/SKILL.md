@@ -85,7 +85,7 @@ Guide for deploying the Kroxylicious Kafka proxy alongside a Strimzi-managed Kaf
        bootstrapNodePort: 30092
    ```
 
-6. **Create the KafkaService CR.** References the Strimzi Kafka cluster. Use `strimziKafkaRef` for automatic discovery:
+6. **Create the KafkaService CR.** References the Strimzi Kafka cluster. Deploy Kroxylicious CRs in the **same namespace** as the Strimzi Kafka cluster — the `strimziKafkaRef` resolves within the same namespace only. Use `strimziKafkaRef` for automatic discovery:
    ```yaml
    apiVersion: kroxylicious.io/v1alpha1
    kind: KafkaService
@@ -93,15 +93,21 @@ Guide for deploying the Kroxylicious Kafka proxy alongside a Strimzi-managed Kaf
      name: my-kafka-service
    spec:
      strimziKafkaRef:
+       kind: Kafka
+       group: kafka.strimzi.io
        name: my-cluster
+       listenerName: plain        # or tls — must match a Kafka listener name
+       trustStrimziCaCertificate: false  # set true for TLS listeners
+     nodeIdRanges:
+       - start: 0
+         end: 2
    ```
    Alternatively, for non-Strimzi clusters or explicit configuration:
    ```yaml
    spec:
      bootstrapServers: kafka-bootstrap:9092
      nodeIdRanges:
-       - name: brokers
-         start: 0
+       - start: 0
          end: 2
    ```
 
@@ -189,11 +195,11 @@ Guide for deploying the Kroxylicious Kafka proxy alongside a Strimzi-managed Kaf
    kubectl get svc -l app=kroxylicious -n <namespace>
 
    # Test with a Kafka client through the proxy
-   kubectl run kafka-test --rm -it --image=quay.io/strimzi/kafka:latest-kafka-3.9.0 -- \
+   kubectl run kafka-test --rm -it --image=quay.io/strimzi/kafka:latest-kafka-4.2.0 -- \
      bin/kafka-console-producer.sh --bootstrap-server <proxy-service>:9092 --topic test-topic
 
    # Verify topics are accessible
-   kubectl run kafka-test --rm -it --image=quay.io/strimzi/kafka:latest-kafka-3.9.0 -- \
+   kubectl run kafka-test --rm -it --image=quay.io/strimzi/kafka:latest-kafka-4.2.0 -- \
      bin/kafka-topics.sh --bootstrap-server <proxy-service>:9092 --list
    ```
    Check proxy logs for errors:
