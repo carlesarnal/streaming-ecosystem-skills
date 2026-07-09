@@ -2,7 +2,9 @@
 
 Claude Code skills for the **Strimzi + Apicurio Registry + Debezium** streaming ecosystem.
 
-These skills help you deploy, connect, configure, and troubleshoot the three projects together — whether on Kubernetes with operators or locally with Docker Compose.
+These skills help you deploy, connect, configure, and troubleshoot the three projects together — on **Kubernetes**, **OpenShift**, or locally with **Docker Compose**.
+
+All skills and example manifests are fully compatible with both vanilla Kubernetes and OpenShift. On OpenShift, the skills automatically handle platform-specific features: OperatorHub installation, Route-based ingress, ImageStream builds for KafkaConnect, and SCC troubleshooting.
 
 ## Installation
 
@@ -18,7 +20,7 @@ Then copy or symlink the `.claude/skills/` directories into your project's `.cla
 
 | Skill | Description |
 |-------|-------------|
-| `deploy-stack` | Deploy the full Strimzi + Apicurio + Debezium stack on Kubernetes using operators |
+| `deploy-stack` | Deploy the full Strimzi + Apicurio + Debezium stack on Kubernetes/OpenShift using operators |
 | `deploy-stack-local` | Spin up the full stack locally with Docker Compose |
 | `connect-debezium-to-registry` | Configure Debezium connectors to use Apicurio Registry for schema management |
 | `setup-kafka-serdes` | Wire Kafka producers/consumers to use Apicurio SerDes |

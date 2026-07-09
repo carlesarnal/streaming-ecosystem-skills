@@ -9,8 +9,9 @@ allowed-tools: Read, Bash, Write, Edit
 Guide for configuring Apicurio Registry to use KafkaSQL storage — a Kafka journal with SQL snapshots for fast startup.
 
 1. **Determine the environment.** Ask the user:
-   - Kubernetes with Apicurio operator + Strimzi, or standalone/Docker?
+   - Kubernetes or OpenShift with Apicurio operator + Strimzi, or standalone/Docker?
    - Kafka security: plain (no auth), TLS (mutual TLS), or OAuth (OAUTHBEARER)?
+   Detect the platform: `kubectl api-resources | grep -q route.openshift.io && echo "OpenShift" || echo "Kubernetes"`. Both platforms use the same CRs — the Apicurio operator creates Routes on OpenShift and Ingresses on vanilla K8s automatically.
 
 2. **For Kubernetes with operators (recommended):** There are three approaches, from simplest to most configurable:
 

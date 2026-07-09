@@ -9,9 +9,10 @@ allowed-tools: Read, Bash, Write, Edit
 Guide for configuring Debezium CDC connectors to use Apicurio Registry as the schema registry for Avro or JSON Schema encoding.
 
 1. **Determine the environment.** Ask the user:
-   - Kubernetes with Strimzi KafkaConnect/KafkaConnector CRs, or standalone Docker/bare-metal?
+   - Kubernetes or OpenShift with Strimzi KafkaConnect/KafkaConnector CRs, or standalone Docker/bare-metal?
    - Source database type: PostgreSQL or MySQL?
    - Schema format: Avro (recommended) or JSON with schema (ExtJsonConverter)?
+   Detect the platform: `kubectl api-resources | grep -q route.openshift.io && echo "OpenShift" || echo "Kubernetes"`. Use `oc` on OpenShift.
 
 2. **For Kubernetes (Strimzi operator):** Create or update a `KafkaConnector` CR. The key converter properties go in `spec.config`:
    ```yaml
@@ -42,6 +43,7 @@ Guide for configuring Debezium CDC connectors to use Apicurio Registry as the sc
        value.converter.apicurio.registry.auto-register: "true"
    ```
    The KafkaConnect CR must have the Apicurio converter JARs in its build plugins (see `examples/k8s/debezium-kafkaconnect.yaml`).
+   **OpenShift:** Use `type: imagestream` for the KafkaConnect build output to push to the internal OpenShift registry instead of an external one.
 
 3. **For Docker/standalone:** POST the connector config to the Connect REST API:
    ```bash
@@ -81,9 +83,11 @@ Guide for configuring Debezium CDC connectors to use Apicurio Registry as the sc
    ```
 
 7. **Verify the integration:**
-   - Check connector status: `curl http://localhost:8083/connectors/my-connector/status`
+   - Check connector status:
+     - **Docker/port-forward:** `curl http://localhost:8083/connectors/my-connector/status`
+     - **OpenShift:** If Connect has a Route: `curl https://$(oc get route <connect-route> -o jsonpath='{.spec.host}')/connectors/my-connector/status`
    - Make a change in the source database (INSERT/UPDATE)
-   - Check that schemas appeared in the registry: `curl http://localhost:8080/apis/registry/v3/search/artifacts`
+   - Check that schemas appeared in the registry: `curl http://<registry-url>/apis/registry/v3/search/artifacts`
    - Check that messages are on the Kafka topic (use `kafka-console-consumer` or `kafkacat`)
 
 8. **Common pitfalls:**

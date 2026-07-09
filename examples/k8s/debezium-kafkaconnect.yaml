@@ -26,9 +26,14 @@ spec:
     value.converter.apicurio.registry.auto-register: "true"
   build:
     output:
+      # Kubernetes: use type: docker with an external registry
       type: docker
       image: my-registry.io/my-connect-cluster:latest
       # pushSecret: my-registry-credentials  # uncomment if using a private registry
+      #
+      # OpenShift: use type: imagestream to push to the internal registry
+      # type: imagestream
+      # image: my-connect-cluster:latest
     plugins:
       - name: debezium-postgres-connector
         artifacts:
