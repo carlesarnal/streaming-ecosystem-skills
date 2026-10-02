@@ -1,0 +1,17 @@
+find /private/tmp/uc1-trials/t22/workspace/scenarios/s2-break-contract -name "*.avsc" -type f
+---
+find /private/tmp/uc1-trials/t22/workspace -name "order-created-v1.avsc" -o -name "*order-created*v1*" 2>/dev/null | head -10
+---
+ls -la /private/tmp/uc1-trials/t22/workspace/fixture/ | grep -E "read-matrix|scripts"
+---
+ls -la /private/tmp/uc1-trials/t22/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t22/workspace/fixture/read-matrix/src -type f
+---
+ls -la /private/tmp/uc1-trials/t22/workspace/fixture/samples/
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc
+---
+cd fixture/read-matrix && mvn -q compile exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s2-break-contract/order-created-v2.avsc ../samples/order-created-v1.jsonl ../samples/order-created-v2.jsonl ../consumers.json"

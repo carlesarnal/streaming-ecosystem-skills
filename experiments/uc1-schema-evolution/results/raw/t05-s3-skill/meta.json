@@ -1,0 +1,9 @@
+{
+  "id": "t05",
+  "scenario": "s3-missing-context",
+  "arm": "skill",
+  "model": "sonnet",
+  "group": "orders-t05",
+  "start": "2026-10-02T09:17:53Z",
+  "wallSeconds": 144
+}

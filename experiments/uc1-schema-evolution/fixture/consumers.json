@@ -1,0 +1,30 @@
+{
+  "topic": "orders.order-created",
+  "registry": {
+    "groupId": "orders",
+    "artifactId": "orders.order-created-value",
+    "compatibilityRule": "BACKWARD"
+  },
+  "producer": {
+    "name": "order-service",
+    "currentSchema": "v1"
+  },
+  "consumers": [
+    {
+      "name": "order-router",
+      "kind": "Apache Camel route (camel-kafka + Apicurio Avro deserializer)",
+      "owner": "team-fulfilment",
+      "releaseCadence": "weekly",
+      "currentReaderSchema": "v1",
+      "requiredFields": ["orderId", "customerId", "amount"]
+    },
+    {
+      "name": "billing",
+      "kind": "Plain Kafka consumer (Apicurio Avro deserializer)",
+      "owner": "team-billing",
+      "releaseCadence": "monthly",
+      "currentReaderSchema": "v1",
+      "requiredFields": ["orderId", "amount", "currency"]
+    }
+  ]
+}

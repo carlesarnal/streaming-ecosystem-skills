@@ -1,0 +1,48 @@
+find /private/tmp/uc1-trials/t18/workspace/scenarios/s2-break-contract -type f -name "*.avsc" -o -name "*.json" -o -name "*.sh" | head -20
+---
+ls -la /private/tmp/uc1-trials/t18/workspace/scenarios/s2-break-contract/
+---
+ls -la /private/tmp/uc1-trials/t18/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t18/workspace/fixture/schemas/
+---
+ls -la /private/tmp/uc1-trials/t18/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t18/workspace/fixture/read-matrix/
+---
+ls -la /private/tmp/uc1-trials/t18/workspace/fixture/read-matrix/src/
+---
+ls -la /private/tmp/uc1-trials/t18/workspace/fixture/samples/
+---
+find /private/tmp/uc1-trials/t18/workspace/fixture/read-matrix/src -type f -name "*.java"
+---
+docker-compose -f fixture/docker-compose.yaml ps
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc
+---
+cd fixture/read-matrix && mvn -q clean package
+---
+cd /private/tmp/uc1-trials/t18/workspace && java -jar fixture/read-matrix/target/read-matrix-1.0-SNAPSHOT.jar \
+  fixture/schemas/order-created-v1.avsc \
+  scenarios/s2-break-contract/order-created-v2.avsc \
+  fixture/samples/order-created-v1.jsonl \
+  scenarios/s2-break-contract/order-created-v2.jsonl \
+  fixture/consumers.json
+---
+find /private/tmp/uc1-trials/t18/workspace/fixture/read-matrix/target -name "*.jar" -type f
+---
+cd /private/tmp/uc1-trials/t18/workspace && java -jar fixture/read-matrix/target/read-matrix-0.1.0.jar \
+  fixture/schemas/order-created-v1.avsc \
+  scenarios/s2-break-contract/order-created-v2.avsc \
+  fixture/samples/order-created-v1.jsonl \
+  scenarios/s2-break-contract/order-created-v2.jsonl \
+  fixture/consumers.json
+---
+mvn -q exec:java \
+  -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s2-break-contract/order-created-v2.avsc ../samples/order-created-v1.jsonl ../../scenarios/s2-break-contract/order-created-v2.jsonl ../consumers.json"
+---
+cd /private/tmp/uc1-trials/t18/workspace && ./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FORWARD
+---
+cd /private/tmp/uc1-trials/t18/workspace && ./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FULL

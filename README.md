@@ -28,6 +28,7 @@ Then copy or symlink the `.claude/skills/` directories into your project's `.cla
 | `deploy-kroxylicious` | Deploy the Kroxylicious Kafka proxy on Kubernetes/OpenShift with Strimzi integration |
 | `configure-kroxylicious-filters` | Configure Kroxylicious filters (encryption, schema validation, multi-tenancy) |
 | `troubleshoot-integration` | Diagnose common cross-project integration issues |
+| `evolve-event-schema` | Decide whether an event schema change can ship safely with independently released consumers, backed by Registry and client read checks |
 
 ## Example Manifests
 
@@ -49,6 +50,10 @@ The `examples/` directory contains ready-to-use manifests:
 ### Docker Compose (`examples/docker-compose/`)
 
 - `full-stack.yaml` — Kafka + PostgreSQL + Apicurio Registry + Kroxylicious + Debezium Connect + Registry UI
+
+## Experiments
+
+- [`experiments/uc1-schema-evolution/`](experiments/uc1-schema-evolution/): RHAF Agentic Skills Use Case 1. A fixture, three scenarios and a protocol for measuring `evolve-event-schema` against the same assistant without the skill.
 
 ## Project Links
 

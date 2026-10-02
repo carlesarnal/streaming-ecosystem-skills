@@ -1,0 +1,9 @@
+{
+  "id": "t09",
+  "scenario": "s1-add-field",
+  "arm": "skill",
+  "model": "sonnet",
+  "group": "orders-t09",
+  "start": "2026-10-02T09:17:52Z",
+  "wallSeconds": 110
+}

@@ -1,0 +1,15 @@
+find /private/tmp/uc1-trials/t16/workspace/scenarios/s3-missing-context -type f -name "*.json" -o -name "*.avsc" -o -name "*.jsonl" -o -name "*.sh" | head -20
+---
+find /private/tmp/uc1-trials/t16/workspace/fixture -type f | head -20
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FULL
+---
+./fixture/scripts/read-matrix.sh scenarios/s3-missing-context
+---
+cat /private/tmp/uc1-trials/t16/workspace/fixture/consumers.json

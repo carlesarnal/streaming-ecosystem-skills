@@ -1,0 +1,2 @@
+{"orderId": "o-4001", "customerId": {"string": "c-42"}, "amount": 19.99, "currency": "EUR", "createdAt": 1790000360000}
+{"orderId": "o-4002", "customerId": null, "amount": 12.5, "currency": "EUR", "createdAt": 1790000420000}

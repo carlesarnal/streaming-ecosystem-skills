@@ -1,0 +1,9 @@
+{
+  "id": "t04",
+  "scenario": "s3-missing-context",
+  "arm": "checklist",
+  "model": "sonnet",
+  "group": "orders-t04",
+  "start": "2026-10-02T09:17:52Z",
+  "wallSeconds": 176
+}

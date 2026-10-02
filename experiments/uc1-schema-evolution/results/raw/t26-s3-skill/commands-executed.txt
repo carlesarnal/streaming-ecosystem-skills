@@ -1,0 +1,19 @@
+find /private/tmp/uc1-trials/t26/workspace/scenarios/s3-missing-context -type f -name "*.avsc" -o -name "*.json" -o -name "*.jsonl" | head -20
+---
+find /private/tmp/uc1-trials/t26/workspace -name "*.avsc" | grep -E "(order|fixture)" | head -20
+---
+ls -la /private/tmp/uc1-trials/t26/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t26/workspace/fixture/ | head -20
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info | jq -r '.name // "not-running"' 2>/dev/null || echo "Registry not running"
+---
+cd /private/tmp/uc1-trials/t26/workspace/scenarios/s3-missing-context && /private/tmp/uc1-trials/t26/workspace/fixture/scripts/registry-check.sh seed
+---
+/private/tmp/uc1-trials/t26/workspace/fixture/scripts/registry-check.sh check order-created-v2.avsc BACKWARD
+---
+/private/tmp/uc1-trials/t26/workspace/fixture/scripts/registry-check.sh check order-created-v2.avsc FORWARD
+---
+/private/tmp/uc1-trials/t26/workspace/fixture/scripts/registry-check.sh check order-created-v2.avsc FULL
+---
+/private/tmp/uc1-trials/t26/workspace/fixture/scripts/read-matrix.sh /private/tmp/uc1-trials/t26/workspace/scenarios/s3-missing-context

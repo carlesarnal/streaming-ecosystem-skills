@@ -1,0 +1,9 @@
+{
+  "id": "t20",
+  "scenario": "s1-add-field",
+  "arm": "baseline",
+  "model": "sonnet",
+  "group": "orders-t20",
+  "start": "2026-10-02T09:20:59Z",
+  "wallSeconds": 143
+}

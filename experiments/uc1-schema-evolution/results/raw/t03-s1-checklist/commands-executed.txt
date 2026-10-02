@@ -1,0 +1,23 @@
+find /private/tmp/uc1-trials/t03/workspace/scenarios/s1-add-field -type f | head -20
+---
+find /private/tmp/uc1-trials/t03/workspace -name "*.avsc" -o -name "*schema*" | grep -v node_modules
+---
+ls -la /private/tmp/uc1-trials/t03/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t03/workspace/fixture/samples/
+---
+ls -la /private/tmp/uc1-trials/t03/workspace/fixture/read-matrix/
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info | jq -r '.name // "not accessible"' 2>/dev/null || echo "Registry not accessible"
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/read-matrix.sh scenarios/s1-add-field/
+---
+find /private/tmp/uc1-trials/t03/workspace -name "*.md" -o -name "*.json" | xargs grep -l "retention\|replay\|reprocess" 2>/dev/null | head -5
+---
+ls -la /private/tmp/uc1-trials/t03/workspace/fixture/

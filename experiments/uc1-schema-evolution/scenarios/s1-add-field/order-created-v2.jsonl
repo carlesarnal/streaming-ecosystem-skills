@@ -1,0 +1,2 @@
+{"orderId": "o-2001", "customerId": "c-42", "amount": 19.99, "currency": "EUR", "createdAt": 1790000120000, "channel": "mobile"}
+{"orderId": "o-2002", "customerId": "c-9", "amount": 5.0, "currency": "GBP", "createdAt": 1790000180000, "channel": "web"}

@@ -1,0 +1,25 @@
+find /private/tmp/uc1-trials/t23/workspace/scenarios/s2-break-contract -type f
+---
+find /private/tmp/uc1-trials/t23/workspace -name "*.avsc" -o -name "*schema*" | grep -E "(order|v1)"
+---
+ls -la /private/tmp/uc1-trials/t23/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t23/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t23/workspace/fixture/read-matrix/src -type f
+---
+ls -la /private/tmp/uc1-trials/t23/workspace/fixture/samples/
+---
+docker-compose -f fixture/docker-compose.yaml ps
+---
+fixture/scripts/registry-check.sh seed
+---
+fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc
+---
+cd fixture/read-matrix && mvn -q clean compile exec:java -Dexec.args="../../fixture/schemas/order-created-v1.avsc ../../scenarios/s2-break-contract/order-created-v2.avsc ../../fixture/samples/order-created-v1.jsonl ../../scenarios/s2-break-contract/order-created-v2.jsonl ../../fixture/consumers.json"
+---
+fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FORWARD
+---
+fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FULL
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t23/artifacts/orders.order-created-value | jq

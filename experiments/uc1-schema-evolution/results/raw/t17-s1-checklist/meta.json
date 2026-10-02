@@ -1,0 +1,9 @@
+{
+  "id": "t17",
+  "scenario": "s1-add-field",
+  "arm": "checklist",
+  "model": "sonnet",
+  "group": "orders-t17",
+  "start": "2026-10-02T09:20:49Z",
+  "wallSeconds": 124
+}

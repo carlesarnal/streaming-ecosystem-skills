@@ -1,0 +1,9 @@
+{
+  "id": "t23",
+  "scenario": "s2-break-contract",
+  "arm": "baseline",
+  "model": "sonnet",
+  "group": "orders-t23",
+  "start": "2026-10-02T09:22:28Z",
+  "wallSeconds": 138
+}

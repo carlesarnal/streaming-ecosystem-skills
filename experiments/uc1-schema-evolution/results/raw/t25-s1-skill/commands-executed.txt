@@ -1,0 +1,19 @@
+find /private/tmp/uc1-trials/t25/workspace/scenarios/s1-add-field -type f -name "*.avsc" | head -20
+---
+find /private/tmp/uc1-trials/t25/workspace -type f -name "*.avsc" | grep -v node_modules
+---
+ls -la /private/tmp/uc1-trials/t25/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t25/workspace/scenarios/s1-add-field/
+---
+curl -s -o /dev/null -w '%{http_code}' http://localhost:8081/apis/registry/v3/system/info || echo "Registry not accessible"
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc
+---
+./fixture/scripts/read-matrix.sh scenarios/s1-add-field
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FULL

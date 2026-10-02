@@ -1,0 +1,43 @@
+{
+ "session_id": "794e5f68-3053-46d9-83a6-fd51f3896fcb",
+ "num_turns": 20,
+ "duration_ms": 146466,
+ "total_cost_usd": 0.27314865,
+ "usage": {
+  "input_tokens": 168,
+  "cache_creation_input_tokens": 20493,
+  "cache_read_input_tokens": 310153,
+  "output_tokens": 6850,
+  "output_tokens_details": {
+   "thinking_tokens": 2097
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 20493
+  },
+  "inference_geo": "",
+  "iterations": [],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-sonnet-4-5@20250929": {
+   "inputTokens": 168,
+   "outputTokens": 6850,
+   "cacheReadInputTokens": 310153,
+   "cacheCreationInputTokens": 20493,
+   "webSearchRequests": 0,
+   "costUSD": 0.27314865,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 2097,
+   "canonicalModel": "claude-sonnet-4-5",
+   "provider": "vertex",
+   "costBasis": "list"
+  }
+ }
+}

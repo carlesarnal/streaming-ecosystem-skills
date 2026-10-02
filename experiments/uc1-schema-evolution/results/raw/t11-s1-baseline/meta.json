@@ -1,0 +1,9 @@
+{
+  "id": "t11",
+  "scenario": "s1-add-field",
+  "arm": "baseline",
+  "model": "sonnet",
+  "group": "orders-t11",
+  "start": "2026-10-02T09:19:40Z",
+  "wallSeconds": 77
+}
