@@ -1,0 +1,19 @@
+ls -la /private/tmp/uc1-trials/t07/workspace/scenarios/s2-break-contract/
+---
+find /private/tmp/uc1-trials/t07/workspace -name "*order-created*v1*" -o -name "*order-created*.avsc" | grep -v v2
+---
+ls -la /private/tmp/uc1-trials/t07/workspace/fixture/read-matrix
+---
+find /private/tmp/uc1-trials/t07/workspace/fixture/read-matrix -name "*.java" | head -1
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc BACKWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FULL
+---
+cd fixture/read-matrix && mvn -q compile exec:java -Dexec.mainClass=io.streaming.uc1.ReadMatrix -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s2-break-contract/order-created-v2.avsc ../samples/order-created-v1.jsonl ../../scenarios/s2-break-contract/order-created-v2.jsonl ../consumers.json"
+---
+find /private/tmp/uc1-trials/t07/workspace -name "*.md" -o -name "*.txt" | xargs grep -l "retention\|replay\|reprocess" 2>/dev/null || echo "No retention/replay info found"

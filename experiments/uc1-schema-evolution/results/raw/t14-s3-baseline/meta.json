@@ -1,0 +1,9 @@
+{
+  "id": "t14",
+  "scenario": "s3-missing-context",
+  "arm": "baseline",
+  "model": "sonnet",
+  "group": "orders-t14",
+  "start": "2026-10-02T09:20:09Z",
+  "wallSeconds": 149
+}

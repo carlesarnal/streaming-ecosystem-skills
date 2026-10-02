@@ -1,0 +1,27 @@
+find /private/tmp/uc1-trials/t02/workspace/scenarios/s3-missing-context -type f -name "*.json" -o -name "*.avsc" -o -name "*.jsonl" -o -name "*.sh" | head -20
+---
+find /private/tmp/uc1-trials/t02/workspace -name "order-created-v1.avsc" -o -name "fixture" -type d | head -10
+---
+ls -la /private/tmp/uc1-trials/t02/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t02/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t02/workspace/fixture/read-matrix/src -type f -name "*.java"
+---
+find /private/tmp/uc1-trials/t02/workspace -name "*order-created*v1.jsonl" -o -name "samples" -type d
+---
+ls -la /private/tmp/uc1-trials/t02/workspace/fixture/samples/
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info 2>&1 | head -20
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc
+---
+cd /private/tmp/uc1-trials/t02/workspace/fixture/read-matrix && mvn -q exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json"
+---
+cd /private/tmp/uc1-trials/t02/workspace/fixture/read-matrix && mvn exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json" 2>&1 | tail -40
+---
+mvn -q clean compile && mvn -q exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json"
+---
+cd /private/tmp/uc1-trials/t02/workspace

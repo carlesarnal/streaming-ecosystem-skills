@@ -1,0 +1,29 @@
+find /private/tmp/uc1-trials/t05/workspace/scenarios/s3-missing-context -type f -name "*.avsc" -o -name "*.jsonl" -o -name "consumers.json"
+---
+ls -la /private/tmp/uc1-trials/t05/workspace/scenarios/s3-missing-context/
+---
+find /private/tmp/uc1-trials/t05/workspace -name "registry-check.sh" -o -name "read-matrix"
+---
+ls -la /private/tmp/uc1-trials/t05/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t05/workspace/fixture/schemas/
+---
+ls -la /private/tmp/uc1-trials/t05/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t05/workspace/fixture/read-matrix/src -name "*.java"
+---
+cd /private/tmp/uc1-trials/t05/workspace/fixture && docker-compose ps
+---
+cd /private/tmp/uc1-trials/t05/workspace && CONSUMERS=/private/tmp/uc1-trials/t05/workspace/scenarios/s3-missing-context/consumers.json /private/tmp/uc1-trials/t05/workspace/fixture/scripts/registry-check.sh seed
+---
+/private/tmp/uc1-trials/t05/workspace/fixture/scripts/registry-check.sh check /private/tmp/uc1-trials/t05/workspace/scenarios/s3-missing-context/order-created-v2.avsc
+---
+ls -la /private/tmp/uc1-trials/t05/workspace/fixture/samples/
+---
+cd /private/tmp/uc1-trials/t05/workspace/fixture/read-matrix && mvn -q exec:java -Dexec.args="../../fixture/schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../../fixture/samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json"
+---
+cd /private/tmp/uc1-trials/t05/workspace/fixture/read-matrix && mvn -e exec:java -Dexec.args="../../fixture/schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../../fixture/samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json" 2>&1 | tail -40
+---
+mvn -q compile
+---
+mvn -q exec:java -Dexec.args="../../fixture/schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../../fixture/samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json"

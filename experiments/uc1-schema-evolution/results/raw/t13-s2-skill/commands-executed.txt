@@ -1,0 +1,19 @@
+find /private/tmp/uc1-trials/t13/workspace/scenarios/s2-break-contract -type f | head -20
+---
+find /private/tmp/uc1-trials/t13/workspace/fixture -name "*.avsc" | head -10
+---
+ls -la /private/tmp/uc1-trials/t13/workspace/fixture/read-matrix 2>/dev/null || find /private/tmp/uc1-trials/t13/workspace/fixture -name "*read-matrix*"
+---
+ls -la /private/tmp/uc1-trials/t13/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t13/workspace/fixture/read-matrix/src -name "*.java"
+---
+find /private/tmp/uc1-trials/t13/workspace/fixture -name "*v1.jsonl"
+---
+cd /private/tmp/uc1-trials/t13/workspace/fixture && ./scripts/registry-check.sh seed
+---
+./scripts/registry-check.sh check /private/tmp/uc1-trials/t13/workspace/scenarios/s2-break-contract/order-created-v2.avsc
+---
+cd /private/tmp/uc1-trials/t13/workspace/fixture/read-matrix && mvn -q compile exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s2-break-contract/order-created-v2.avsc ../samples/order-created-v1.jsonl ../../scenarios/s2-break-contract/order-created-v2.jsonl ../consumers.json"
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t13/artifacts/orders.order-created-value | jq '.'

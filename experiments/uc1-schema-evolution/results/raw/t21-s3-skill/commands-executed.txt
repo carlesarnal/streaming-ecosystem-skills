@@ -1,0 +1,21 @@
+find /private/tmp/uc1-trials/t21/workspace/scenarios/s3-missing-context -type f | head -20
+---
+find /private/tmp/uc1-trials/t21/workspace/fixture -name "*.avsc" | head -20
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t21/artifacts/orders.order-created-value/rules/COMPATIBILITY 2>/dev/null || echo "No artifact-level rule found"
+---
+cd /private/tmp/uc1-trials/t21/workspace/scenarios/s3-missing-context && cat order-created-v2.avsc | jq -nc --rawfile s /dev/stdin '{content:{content:$s,contentType:"application/json"}}' | curl -s -X POST -H 'Content-Type: application/json' http://localhost:8081/apis/registry/v3/groups/orders-t21/artifacts/orders.order-created-value/versions?dryRun=true -d @- 2>&1
+---
+ls -la /private/tmp/uc1-trials/t21/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t21/workspace/fixture/consumers.json 2>&1
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FULL
+---
+./fixture/scripts/read-matrix.sh scenarios/s3-missing-context

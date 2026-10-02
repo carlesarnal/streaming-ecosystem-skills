@@ -1,0 +1,31 @@
+find /private/tmp/uc1-trials/t27/workspace/scenarios/s1-add-field -type f -name "*.avsc" | head -20
+---
+find /private/tmp/uc1-trials/t27/workspace -type f -name "*.avsc" | grep -E "(v1|order-created)" | grep -v v2
+---
+ls -la /private/tmp/uc1-trials/t27/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t27/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t27/workspace/fixture/read-matrix/src -type f -name "*.java" -o -name "*.json"
+---
+ls -la /private/tmp/uc1-trials/t27/workspace/fixture/samples/
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info | jq -r '.name // "not running"'
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc BACKWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FULL
+---
+cd fixture/read-matrix && mvn -q exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s1-add-field/order-created-v2.avsc ../samples/order-created-v1.jsonl ../samples/order-created-v2.jsonl ../consumers.json"
+---
+cd fixture/read-matrix && mvn exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s1-add-field/order-created-v2.avsc ../samples/order-created-v1.jsonl ../samples/order-created-v2.jsonl ../consumers.json" 2>&1 | tail -20
+---
+mvn -q compile
+---
+mvn -q exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s1-add-field/order-created-v2.avsc ../samples/order-created-v1.jsonl ../samples/order-created-v2.jsonl ../consumers.json"
+---
+cd /private/tmp/uc1-trials/t27/workspace

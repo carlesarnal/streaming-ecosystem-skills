@@ -1,0 +1,9 @@
+{
+  "id": "t07",
+  "scenario": "s2-break-contract",
+  "arm": "checklist",
+  "model": "sonnet",
+  "group": "orders-t07",
+  "start": "2026-10-02T09:17:52Z",
+  "wallSeconds": 152
+}

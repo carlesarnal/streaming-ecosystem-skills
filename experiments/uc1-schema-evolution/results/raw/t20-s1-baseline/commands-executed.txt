@@ -1,0 +1,29 @@
+find /private/tmp/uc1-trials/t20/workspace -type f -name "*.json" -o -name "*.avsc" | head -20
+---
+ls -la /private/tmp/uc1-trials/t20/workspace/scenarios/s1-add-field/
+---
+ls -la /private/tmp/uc1-trials/t20/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t20/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t20/workspace/fixture/read-matrix/
+---
+ls -la /private/tmp/uc1-trials/t20/workspace/fixture/samples/
+---
+find fixture/read-matrix/src -name "*.java"
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info 2>&1 | head -5
+---
+fixture/scripts/registry-check.sh seed
+---
+fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc
+---
+fixture/scripts/read-matrix.sh scenarios/s1-add-field/
+---
+fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FORWARD
+---
+fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FULL
+---
+ls -la /private/tmp/uc1-trials/t20/workspace/
+---
+find /private/tmp/uc1-trials/t20/workspace -name "README*" -o -name "*.md" | grep -v node_modules | head -10

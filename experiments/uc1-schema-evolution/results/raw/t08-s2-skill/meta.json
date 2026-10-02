@@ -1,0 +1,9 @@
+{
+  "id": "t08",
+  "scenario": "s2-break-contract",
+  "arm": "skill",
+  "model": "sonnet",
+  "group": "orders-t08",
+  "start": "2026-10-02T09:17:53Z",
+  "wallSeconds": 107
+}

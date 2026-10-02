@@ -1,0 +1,29 @@
+find /private/tmp/uc1-trials/t17/workspace/scenarios/s1-add-field -type f | head -20
+---
+find /private/tmp/uc1-trials/t17/workspace -type d -name fixture
+---
+ls -la /private/tmp/uc1-trials/t17/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t17/workspace/fixture/schemas/
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t17/artifacts/orders.order-created-value/rules/COMPATIBILITY 2>&1 || echo "Rule check failed or not set"
+---
+ls -la /private/tmp/uc1-trials/t17/workspace/fixture/scripts/
+---
+cd /private/tmp/uc1-trials/t17/workspace/scenarios/s1-add-field && cat ../../fixture/scripts/registry-check.sh | head -30
+---
+cd /private/tmp/uc1-trials/t17/workspace && ./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc BACKWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FULL
+---
+ls -la /private/tmp/uc1-trials/t17/workspace/fixture/read-matrix/
+---
+./fixture/scripts/read-matrix.sh scenarios/s1-add-field
+---
+grep -r "retention\|replay\|reprocess" /private/tmp/uc1-trials/t17/workspace/scenarios/s1-add-field/ 2>/dev/null || echo "No retention/replay info found in scenario"
+---
+find /private/tmp/uc1-trials/t17/workspace -name "*.md" -o -name "README*" | xargs grep -l "retention\|replay" 2>/dev/null || echo "No retention info in docs"

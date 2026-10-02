@@ -1,0 +1,11 @@
+find /private/tmp/uc1-trials/t11/workspace/scenarios/s1-add-field -type f | head -20
+---
+find /private/tmp/uc1-trials/t11/workspace -name "*.avsc" -o -name "*schema*" | grep -E "(order|created)" | head -10
+---
+ls -la /private/tmp/uc1-trials/t11/workspace/fixture/scripts/
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc
+---
+./fixture/scripts/read-matrix.sh scenarios/s1-add-field

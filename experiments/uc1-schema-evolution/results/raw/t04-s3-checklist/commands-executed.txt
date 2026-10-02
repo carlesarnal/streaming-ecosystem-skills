@@ -1,0 +1,25 @@
+ls -la /private/tmp/uc1-trials/t04/workspace/scenarios/s3-missing-context/
+---
+find /private/tmp/uc1-trials/t04/workspace -name "*.avsc" -o -name "registry-check.sh" -o -name "read-matrix" | head -20
+---
+cat /private/tmp/uc1-trials/t04/workspace/fixture/read-matrix
+---
+ls -la /private/tmp/uc1-trials/t04/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t04/workspace/fixture/read-matrix/src -name "*.java" | head -5
+---
+curl -sf http://localhost:8081/apis/registry/v3/system/info > /dev/null && echo "Registry is running" || echo "Registry not running"
+---
+ls -la /private/tmp/uc1-trials/t04/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t04/workspace/fixture/samples/
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FULL
+---
+cd fixture/read-matrix && mvn -q clean package exec:java -Dexec.args="../schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json"

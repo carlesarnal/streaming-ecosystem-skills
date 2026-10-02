@@ -1,0 +1,23 @@
+ls -la /private/tmp/uc1-trials/t12/workspace/scenarios/s3-missing-context/
+---
+ls -la /private/tmp/uc1-trials/t12/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t12/workspace/fixture/schemas/
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t12/artifacts/orders.order-created-value/rules/COMPATIBILITY
+---
+fixture/scripts/registry-check.sh scenarios/s3-missing-context/order-created-v2.avsc
+---
+fixture/scripts/registry-check.sh seed
+---
+fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc
+---
+ls -la /private/tmp/uc1-trials/t12/workspace/fixture/read-matrix/
+---
+find /private/tmp/uc1-trials/t12/workspace/fixture/read-matrix/src -type f
+---
+cd /private/tmp/uc1-trials/t12/workspace/fixture/read-matrix && mvn -q compile exec:java -Dexec.args="../../fixture/schemas/order-created-v1.avsc ../../scenarios/s3-missing-context/order-created-v2.avsc ../../fixture/samples/order-created-v1.jsonl ../../scenarios/s3-missing-context/order-created-v2.jsonl ../../scenarios/s3-missing-context/consumers.json"
+---
+fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FORWARD
+---
+fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FULL

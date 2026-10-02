@@ -1,0 +1,29 @@
+find scenarios/s1-add-field -type f -name "*.json" -o -name "*.avsc"
+---
+ls -la scenarios/s1-add-field/
+---
+find . -type d -name "fixture" 2>/dev/null
+---
+ls -la fixture/
+---
+ls -la fixture/schemas/
+---
+ls -la fixture/scripts/
+---
+ls -la fixture/samples/
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info | jq -r '.name // empty' 2>/dev/null || echo "Registry not available"
+---
+./fixture/scripts/registry-check.sh seed
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t10/artifacts/orders.order-created-value/rules/COMPATIBILITY | jq
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc BACKWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FULL
+---
+./fixture/scripts/read-matrix.sh scenarios/s1-add-field/
+---
+find . -name "*.md" -type f | grep -E "(README|DESIGN|ARCHITECTURE|retention|replay)" | head -10

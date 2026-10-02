@@ -1,0 +1,35 @@
+find /private/tmp/uc1-trials/t06/workspace/scenarios/s3-missing-context -type f | head -20
+---
+ls -la /private/tmp/uc1-trials/t06/workspace/scenarios/s3-missing-context/*.avsc 2>/dev/null || echo "No .avsc files found"
+---
+find /private/tmp/uc1-trials/t06/workspace -name "order-created-v1.avsc" -o -name "order-created.avsc" | head -5
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t06/artifacts/orders.order-created-value/rules/COMPATIBILITY 2>&1
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t06/artifacts/orders.order-created-value/versions 2>&1 | jq -r '.versions[] | "\(.version): \(.createdOn)"' | head -10
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t06/artifacts/orders.order-created-value/versions/1/content 2>&1
+---
+./fixture/scripts/registry-check.sh orders-t06 orders.order-created-value scenarios/s3-missing-context/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FULL
+---
+ls -la /private/tmp/uc1-trials/t06/workspace/fixture/read-matrix
+---
+./fixture/read-matrix --help 2>&1 || ./fixture/read-matrix 2>&1 | head -20
+---
+find /private/tmp/uc1-trials/t06/workspace/fixture/read-matrix/src -name "*.java" | head -5
+---
+find /private/tmp/uc1-trials/t06/workspace -name "*v1.jsonl" -o -name "order-created.jsonl" | head -5
+---
+mvn -q -f fixture/read-matrix/pom.xml exec:java -Dexec.args="fixture/schemas/order-created-v1.avsc scenarios/s3-missing-context/order-created-v2.avsc fixture/samples/order-created-v1.jsonl scenarios/s3-missing-context/order-created-v2.jsonl scenarios/s3-missing-context/consumers.json"
+---
+mvn -q -f fixture/read-matrix/pom.xml exec:java -e -Dexec.args="fixture/schemas/order-created-v1.avsc scenarios/s3-missing-context/order-created-v2.avsc fixture/samples/order-created-v1.jsonl scenarios/s3-missing-context/order-created-v2.jsonl scenarios/s3-missing-context/consumers.json" 2>&1 | tail -40
+---
+cd fixture/read-matrix && mvn -q clean compile
+---
+cd /private/tmp/uc1-trials/t06/workspace && mvn -q -f fixture/read-matrix/pom.xml exec:java -Dexec.args="fixture/schemas/order-created-v1.avsc scenarios/s3-missing-context/order-created-v2.avsc fixture/samples/order-created-v1.jsonl scenarios/s3-missing-context/order-created-v2.jsonl scenarios/s3-missing-context/consumers.json"

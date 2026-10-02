@@ -1,0 +1,33 @@
+find /private/tmp/uc1-trials/t01/workspace/scenarios/s1-add-field -type f | head -20
+---
+find /private/tmp/uc1-trials/t01/workspace -name "*.avsc" -o -name "*schema*" | grep -E "(order|created)" | head -20
+---
+ls -la /private/tmp/uc1-trials/t01/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t01/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t01/workspace/fixture/read-matrix/
+---
+ls -la /private/tmp/uc1-trials/t01/workspace/fixture/samples/
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info | jq -r '.name // .'
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s1-add-field/order-created-v2.avsc FULL
+---
+./fixture/scripts/read-matrix.sh scenarios/s1-add-field/
+---
+find /private/tmp/uc1-trials/t01/workspace/fixture/read-matrix -name "*.java" | head -5
+---
+find /private/tmp/uc1-trials/t01/workspace/fixture/read-matrix/src -type f
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t01/artifacts/orders.order-created-value | jq -r '{groupId, artifactId, artifactType, createdOn, modifiedOn}'
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t01/artifacts/orders.order-created-value/versions | jq -r '.versions[] | {version, globalId, state, createdOn}'
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t01/artifacts/orders.order-created-value/rules/COMPATIBILITY | jq -r '.config'

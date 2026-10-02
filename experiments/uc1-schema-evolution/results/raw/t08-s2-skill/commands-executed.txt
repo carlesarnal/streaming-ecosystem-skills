@@ -1,0 +1,23 @@
+find /private/tmp/uc1-trials/t08/workspace/scenarios/s2-break-contract -type f -name "*.avsc" | sort
+---
+ls -la /private/tmp/uc1-trials/t08/workspace/scenarios/s2-break-contract/
+---
+find /private/tmp/uc1-trials/t08/workspace -name "*.avsc" -o -name "order-created*" | grep -v node_modules
+---
+ls -la /private/tmp/uc1-trials/t08/workspace/fixture/scripts/
+---
+cat /private/tmp/uc1-trials/t08/workspace/fixture/scripts/registry-check.sh
+---
+cat /private/tmp/uc1-trials/t08/workspace/fixture/scripts/read-matrix.sh
+---
+ls -la /private/tmp/uc1-trials/t08/workspace/fixture/
+---
+./fixture/scripts/registry-check.sh seed
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FULL
+---
+./fixture/scripts/read-matrix.sh scenarios/s2-break-contract/

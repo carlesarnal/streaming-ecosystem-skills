@@ -1,8 +1,17 @@
 # UC1 · Evolve an event schema: discussion brief
 
 **For:** Joe, Andreu · **From:** Carles · **Date:** 2026-10-02
-**Status:** Experiment built and tooling verified. No trials run yet, so there
-are **no ROI results** so far.
+**Status:** Experiment built, thresholds pre-registered, 27 trials run and
+blind-scored on 2026-10-02. Results are in section 5 and `results/results.md`.
+
+> **TL;DR:** Pre-registered verdict: **no demonstrated value for the skill
+> as installed.** Main reason: Claude Code only auto-invoked it in 3 of 9
+> trials. When the guidance did reach the model, proposals were better
+> (checklist arm +1.67 points on the hard scenarios; skill-loaded trials 10/10).
+> No arm ever approved a breaking change: the deterministic tools prevented
+> the dangerous outcome by themselves. The value seems to be in tooling plus a
+> consumer inventory, with guidance as a smaller second layer. One clear next
+> run would confirm or reject this.
 **Source:** RHAF Agentic Skills, "Choosing the first experiment" (2026-09-30), Use Case 1.
 
 ---
@@ -126,28 +135,88 @@ Full protocol: `README.md`. Scoring: `rubric.md`.
 
 Setup cost (fixture, writing the skill) is reported separately.
 
-## 5. Decisions needed
+## 5. Results (run of 2026-10-02)
 
-1. **Pass/fail thresholds** must be agreed **before** the first trial, otherwise
-   the result is open to interpretation. Proposal:
-   - *Continue* if the skill arm has zero critical errors and the baseline has
-     ≥1, **or** mean correctness improves by ≥2 points on S2/S3, with no
-     regression on S1 (time within +25%).
-   - *Stop or redirect* if the checklist arm matches the skill arm. In that
-     case the value is in the content, not the skill mechanism, so we ship
-     docs or a checklist instead.
-2. **Model(s)** to test. One model is cheaper; two show whether the result
-   holds across models.
-3. **Include the checklist arm?** Recommended: it answers the deck's own
-   "what could make this unnecessary?" question.
-4. **Who runs and who scores.** Scoring should be done by someone who didn't
-   run the trial.
-5. **Capacity:** about 2–3 more days (trials plus scoring and write-up), within
-   the deck's 3–5 day estimate.
-6. **Customer track:** who recruits customers to check that the scenarios
-   match real episodes (runs in parallel; not blocking).
+### 5.1 How it ran
 
-## 6. Limitations and threats to validity
+- **Thresholds** were written into `rubric.md` and committed (`9b2e9c8`)
+  **before** the first trial.
+- **27 trials:** 3 scenarios × 3 arms (baseline, skill, checklist) × 3 runs,
+  randomized order. Claude Code 2.1.280 headless, model **Sonnet 4.5**, a fresh
+  isolated workspace and Registry group per trial.
+- **Blind scoring:** arm labels removed, random IDs, one LLM scorer per
+  scenario with the rubric, answer key and the list of commands each trial
+  actually ran.
+- **Total cost: $8.41.** About 2 minutes per trial.
+
+### 5.2 Headline numbers
+
+| | Baseline | Skill (as assigned) | Checklist |
+|---|---|---|---|
+| Critical errors (27 trials) | 0 | 0 | 0 |
+| S1 mean score (safe change) | 9.00 | 9.67 | 9.67 |
+| S2 mean score (rename trap) | 8.67 | 8.00 | 9.67 |
+| S3 mean score (missing context) | 6.67 | 8.00 | 9.00 |
+| **S2+S3 mean score** | **7.67** | **8.00** | **9.33** |
+| S3 runs that asked for missing info | 1/3 | 1/3 | 2/3 |
+| Skill actually loaded | n/a | **3/9** | n/a |
+
+### 5.3 Verdict against pre-registered thresholds
+
+**NO DEMONSTRATED VALUE** for the skill as installed. "Skill adds value"
+needed ≥2 baseline critical errors or a ≥2.0-point gain; we observed 0
+errors and +0.33.
+
+### 5.4 What explains it (exploratory)
+
+1. **Activation, not content, is the weak point.** The skill was installed
+   and matched the task, but Claude Code invoked it in only 3 of 9 runs.
+   Those 3 runs scored **10/10**. The 6 runs that didn't load it averaged
+   7.83, about the same as the baseline.
+2. **The content helps when it reaches the model.** The checklist arm (same
+   text, in the prompt) was best on the hard scenarios: **+1.67** over
+   baseline on S2+S3 and **+2.33** on S3, mainly by asking for missing
+   information instead of assuming, and by choosing the right compatibility
+   direction.
+3. **The tools did the safety work.** No arm approved a breaking change.
+   Every arm ran the read matrix, which encodes each consumer's required
+   fields and makes failures obvious. The dangerous outcome we expected the
+   skill to prevent never happened in the baseline either. This answers the
+   deck's "what could make this unnecessary?": **good tools plus a consumer
+   inventory** cover safety; guidance improves reasoning quality.
+
+### 5.5 Caveats
+
+n = 3 per cell; one model; the author built the skill, scenarios and scoring
+prompts; LLM scorer without a human second rating; constructed scenarios with
+a helpful read matrix. Full list in `results/results.md`.
+
+## 6. Decisions needed
+
+1. **How to read this result.** Options:
+   - (a) Take the result as it stands: skills as auto-invoked packages don't
+     pay off here; invest in tools and inventory.
+   - (b) **Recommended:** one more targeted run (about 1 day, about $10)
+     before concluding, because the result depends on activation, which is
+     fixable.
+2. **Scope of the follow-up run** (if b):
+   - Skill explicitly invoked vs checklist vs baseline: is it the content or
+     the packaging?
+   - Improve the skill description and measure the auto-invocation rate on
+     its own.
+   - A harder scenario variant **without** the read matrix and consumer
+     contracts (only Registry plus consumer source code), so the assistant
+     has to discover dependencies. That's closer to real repos and the only
+     setting where the "gathering constraints" claim is really tested.
+3. **Second model** (for example Opus) and a **human scorer** for a subset.
+4. **Customer track:** who recruits customers to check that the scenarios
+   match real episodes.
+5. **Product implication to discuss:** if tools carry the value, is the
+   RHAF deliverable a skill, or a Registry feature (for example "check
+   against all consumer reader versions" / FORWARD check of the release
+   plan) plus a thin skill?
+
+## 7. Limitations and threats to validity
 
 - **Constructed scenarios**, not observed customer cases. Mitigation: customer
   track; replace or add scenarios with real episodes.
@@ -164,33 +233,35 @@ Setup cost (fixture, writing the skill) is reported separately.
 - **Leakage:** the answer key is in the same repo, so trials must run in a
   copy without it (documented in the protocol).
 
-## 7. Incident during setup
+## 8. Incident during setup
 
 The first check run hit an existing local Registry on port 8080
 (`agent-discovery-demo`, 3.3.0). That instance now has an extra artifact
 `orders/orders.order-created-value` (v1, BACKWARD rule). Deletes are disabled
 there, so it needs a container reset. Fixed by moving the fixture to port 8081.
 
-## 8. Proposed next steps
+## 9. Proposed next steps
 
 | # | Step | Owner | Effort |
 |---|---|---|---|
-| 1 | Agree thresholds, model(s), arms (section 5) | Joe, Andreu, Carles | 30 min meeting |
-| 2 | Optional: add one scenario written by someone other than Carles | TBD | 0.5 day |
-| 3 | Run trials | Carles | 1–1.5 days |
-| 4 | Blind scoring | TBD (not the runner) | 0.5 day |
-| 5 | Write-up against thresholds; decide whether to extend, change or stop | All | 0.5 day |
+| 1 | Discuss results and pick option (a) or (b) from section 6 | Joe, Andreu, Carles | 30–45 min meeting |
+| 2 | If (b): fix the skill description; add the explicit-invocation arm and the no-read-matrix scenario | Carles | 0.5 day |
+| 3 | If (b): rerun (add a second model if agreed), same pre-registration process | Carles | 0.5 day, about $10–20 |
+| 4 | Human second scoring of a subset of proposals | TBD (not Carles) | 2 h |
+| 5 | Final write-up: extend, change or stop | All | 0.5 day |
 
-## 9. Repository map
+## 10. Repository map
 
 ```
 .claude/skills/evolve-event-schema/SKILL.md   Skill under test
 experiments/uc1-schema-evolution/
   DISCUSSION.md        This document
   README.md            Trial protocol
-  rubric.md            Scoring and thresholds
+  rubric.md            Scoring and pre-registered thresholds
   answer-key/          Expected outcomes (hidden from agents)
-  results/results.md   Trial log
+  harness/run-trial.sh Headless Claude Code trial runner
+  results/results.md   Full trial log, verdict, exploratory findings
+  results/raw/         Per-trial proposals, commands run, cost/usage, blind key
   fixture/             Kafka + Registry, checks, read matrix
   scenarios/s1..s3     Task briefs, candidate schemas, sample events
 ```

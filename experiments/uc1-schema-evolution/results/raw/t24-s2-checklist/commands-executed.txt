@@ -1,0 +1,23 @@
+ls -la /private/tmp/uc1-trials/t24/workspace/scenarios/s2-break-contract/
+---
+find /private/tmp/uc1-trials/t24/workspace -name "consumers.json" -o -name "order-created*.avsc" | head -20
+---
+ls -la /private/tmp/uc1-trials/t24/workspace/fixture/scripts/
+---
+ls -la /private/tmp/uc1-trials/t24/workspace/fixture/
+---
+ls -la /private/tmp/uc1-trials/t24/workspace/fixture/samples/
+---
+curl -s http://localhost:8081/apis/registry/v3/system/info | jq -r '.name // "Registry not responding"'
+---
+./fixture/scripts/registry-check.sh seed
+---
+curl -s http://localhost:8081/apis/registry/v3/groups/orders-t24/artifacts/orders.order-created-value/rules/COMPATIBILITY | jq
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc BACKWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FORWARD
+---
+./fixture/scripts/registry-check.sh check scenarios/s2-break-contract/order-created-v2.avsc FULL
+---
+./fixture/scripts/read-matrix.sh scenarios/s2-break-contract/

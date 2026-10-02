@@ -1,0 +1,19 @@
+find scenarios/s3-missing-context -type f -name "*.json" -o -name "*.avsc" -o -name "*.jsonl" | head -20
+---
+find . -name "*.avsc" -type f | grep -E "(v1|order-created)" | grep -v v2
+---
+ls -la fixture/scripts/
+---
+ls -la fixture/read-matrix/
+---
+ls -la fixture/samples/
+---
+CONSUMERS=scenarios/s3-missing-context/consumers.json fixture/scripts/registry-check.sh seed
+---
+CONSUMERS=scenarios/s3-missing-context/consumers.json fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc BACKWARD
+---
+fixture/scripts/read-matrix.sh scenarios/s3-missing-context
+---
+find . -name "README*" -o -name "CLAUDE.md" | head -10
+---
+CONSUMERS=scenarios/s3-missing-context/consumers.json fixture/scripts/registry-check.sh check scenarios/s3-missing-context/order-created-v2.avsc FULL
