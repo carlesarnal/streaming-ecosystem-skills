@@ -1,0 +1,2 @@
+{"orderId": "o-1001", "customerId": "c-42", "amount": 19.99, "currency": "EUR", "createdAt": 1790000000000}
+{"orderId": "o-1002", "customerId": "c-7", "amount": 250.0, "currency": "USD", "createdAt": 1790000060000}

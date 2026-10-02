@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "OrderCreated",
+  "namespace": "com.example.orders",
+  "fields": [
+    {"name": "orderId", "type": "string"},
+    {"name": "customerId", "type": "string"},
+    {"name": "amount", "type": "double"},
+    {"name": "currency", "type": "string"},
+    {"name": "createdAt", "type": {"type": "long", "logicalType": "timestamp-millis"}},
+    {"name": "channel", "type": "string", "default": "web", "doc": "Sales channel. Informational only."}
+  ]
+}
