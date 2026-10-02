@@ -32,7 +32,19 @@ per-trial cost.
 
 ## Decision thresholds (agree before running)
 
-Fill in before the first trial:
+Pre-registered on 2026-10-02 by Carles, before any trial, and committed
+before the first run. Design: 3 scenarios × 3 arms (baseline, skill,
+checklist) × 3 runs = 27 trials.
 
-- Skill is worth pursuing if: ______ (e.g. zero critical errors with skill vs ≥1 without, or ≥2-point mean correctness gain)
-- Skill is not worth pursuing if: ______ (e.g. a checklist in the task brief performs equally)
+**Primary outcome:** critical errors (rate per arm, S2 + S3 = 6 trials per arm).
+**Secondary:** mean correctness on S2 + S3; S1 time and cost overhead.
+
+| Verdict | Condition (all must hold) |
+|---|---|
+| **SKILL ADDS VALUE** | Skill arm: 0 critical errors on S2/S3 **and** baseline: ≥2 critical errors on S2/S3 (or a skill mean correctness gain on S2/S3 of ≥2.0 points over baseline); **and** on S1 the skill arm's mean correctness is ≥8 and median time ≤ 1.5× baseline; **and** the skill beats checklist by ≥1.0 point mean correctness on S2/S3 or by ≥1 fewer critical error. |
+| **CONTENT ADDS VALUE, SKILL MECHANISM DOES NOT** | The skill meets the first two conditions above, but the checklist arm is within 1.0 point and has no more critical errors. Recommendation: ship the guidance as docs/checklist; the skill packaging is not justified by this data. |
+| **NO DEMONSTRATED VALUE** | Skill mean correctness on S2/S3 is < baseline + 1.0 **and** critical errors are not lower than baseline. Recommendation: stop or change the case. |
+| **INCONCLUSIVE** | Anything else. Recommendation: more runs or more scenarios before deciding. |
+
+With n = 3 per cell, these thresholds can detect large effects only. A
+difference of 1–2 trials is reported as a direction, not as proof.
